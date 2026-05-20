@@ -2,188 +2,202 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/lib/supabase";
-import { PlusIcon, TrashIcon } from "@/components/ui/icons";
+import { TrophyIcon, UsersIcon, ShieldIcon, PlusIcon } from "@/components/ui/icons";
+import { BulkPlayerManager } from "@/components/team/bulk-player-manager";
 
 export default function CreateTeamPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [team, setTeam] = useState({
+  const [error, setError] = useState("");
+  const [step, setStep] = useState(1);
+  const [teamData, setTeamData] = useState({
     name: "",
     color: "#10B981",
-    is_public: false,
+    is_public: true,
   });
-  const [players, setPlayers] = useState<{ name: string; batting_style: string; bowling_style: string }[]>([
-    { name: "", batting_style: "RHB", bowling_style: "" },
-  ]);
+  const [teamId, setTeamId] = useState<string | null>(null);
 
-  const addPlayer = () => {
-    setPlayers([...players, { name: "", batting_style: "RHB", bowling_style: "" }]);
-  };
-
-  const removePlayer = (index: number) => {
-    setPlayers(players.filter((_, i) => i !== index));
-  };
-
-  const updatePlayer = (index: number, updates: Partial<typeof players[0]>) => {
-    const newPlayers = [...players];
-    newPlayers[index] = { ...newPlayers[index], ...updates };
-    setPlayers(newPlayers);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleCreateTeam = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!team.name) return;
-
     setLoading(true);
+    setError("");
+
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-      setLoading(false);
+      router.push("/auth/login");
       return;
     }
 
-    const { data: newTeam, error: teamError } = await supabase
+    const { data, error: insertError } = await supabase
       .from("teams")
       .insert({
-        name: team.name,
-        color: team.color,
-        is_public: team.is_public,
+        ...teamData,
         owner_id: user.id,
       })
       .select()
       .single();
 
-    if (teamError || !newTeam) {
+    if (insertError) {
+      setError(insertError.message);
       setLoading(false);
-      return;
+    } else {
+      setTeamId(data.id);
+      setStep(2);
+      setLoading(false);
     }
+  };
 
-    const validPlayers = players.filter((p) => p.name.trim());
-    if (validPlayers.length > 0) {
-      await supabase.from("players").insert(
-        validPlayers.map((p) => ({
-          ...p,
-          team_id: newTeam.id,
-        }))
-      );
+  const handleSavePlayers = async (players: any[]) => {
+    if (!teamId) return;
+    setLoading(true);
+
+    const supabase = createClient();
+    const playersToInsert = players.map(p => ({
+      ...p,
+      team_id: teamId,
+    }));
+
+    const { error: playerError } = await supabase
+      .from("players")
+      .insert(playersToInsert);
+
+    if (playerError) {
+      setError(playerError.message);
+      setLoading(false);
+    } else {
+      router.push(`/team/${teamId}`);
     }
-
-    router.push("/dashboard/teams");
   };
 
   return (
-    <div className="max-w-2xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-[#F1F5F9]">Create Team</h1>
-        <p className="text-[#64748B] mt-1">Build your team roster with players</p>
+    <div className="max-w-4xl mx-auto py-8">
+      <div className="mb-12 text-center">
+        <motion.h1 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-5xl font-black text-text text-glow-primary mb-3"
+        >
+          {step === 1 ? "Build Your Squad" : "Recruit Players"}
+        </motion.h1>
+        <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-text-muted text-lg"
+        >
+          {step === 1 ? "Define your team's identity and colors." : "Add your championship roster below."}
+        </motion.p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Team details */}
-        <div className="card">
-          <h2 className="text-lg font-semibold text-[#F1F5F9] mb-4">Team Info</h2>
-          <div className="space-y-4">
-            <div>
-              <label className="input-label">Team Name *</label>
-              <input
-                type="text"
-                value={team.name}
-                onChange={(e) => setTeam({ ...team, name: e.target.value })}
-                className="input"
-                placeholder="Mumbai Strikers"
-                required
-              />
-            </div>
-            <div>
-              <label className="input-label">Team Color</label>
-              <div className="flex items-center gap-3">
-                {["#10B981", "#F59E0B", "#8B5CF6", "#EF4444", "#3B82F6", "#EC4899"].map((color) => (
-                  <button
-                    key={color}
-                    type="button"
-                    onClick={() => setTeam({ ...team, color })}
-                    className={`w-10 h-10 rounded-full transition-all ${
-                      team.color === color ? "ring-2 ring-offset-2 ring-offset-[#1A1D27] scale-110" : ""
-                    }`}
-                    style={{ backgroundColor: color }}
-                  />
-                ))}
-              </div>
-            </div>
-            <label className="flex items-center gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={team.is_public}
-                onChange={(e) => setTeam({ ...team, is_public: e.target.checked })}
-                className="w-5 h-5 rounded border-[#2D3748] bg-[#232738] accent-[#10B981]"
-              />
-              <div>
-                <div className="text-[#F1F5F9] font-medium">Public Team</div>
-                <div className="text-sm text-[#64748B]">Others can discover and follow</div>
-              </div>
-            </label>
-          </div>
-        </div>
+      <AnimatePresence mode="wait">
+        {step === 1 ? (
+          <motion.form
+            key="team-form"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            onSubmit={handleCreateTeam}
+            className="space-y-8"
+          >
+            <div className="card p-8 border-primary/20 bg-primary/5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                  <div>
+                    <label className="input-label">Team Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={teamData.name}
+                      onChange={(e) => setTeamData({ ...teamData, name: e.target.value })}
+                      className="input input-marvelous text-xl font-bold"
+                      placeholder="e.g. Mumbai Mavericks"
+                    />
+                  </div>
+                  <div>
+                    <label className="input-label">Primary Color</label>
+                    <div className="flex gap-3">
+                      {["#10B981", "#8B5CF6", "#F59E0B", "#EF4444", "#3B82F6", "#EC4899"].map(c => (
+                        <button
+                          key={c}
+                          type="button"
+                          onClick={() => setTeamData({ ...teamData, color: c })}
+                          className={`w-10 h-10 rounded-full border-2 transition-all ${teamData.color === c ? 'border-white scale-110 shadow-lg' : 'border-transparent opacity-60'}`}
+                          style={{ backgroundColor: c }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
 
-        {/* Players */}
-        <div className="card">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-[#F1F5F9]">Players ({players.length})</h2>
-            <button type="button" onClick={addPlayer} className="btn btn-secondary text-sm py-2">
-              <PlusIcon className="w-4 h-4" />
-              Add Player
+                <div className="flex flex-col justify-center items-center p-6 bg-surface/40 rounded-2xl border border-border/40">
+                  <div 
+                    className="w-32 h-32 rounded-full mb-4 flex items-center justify-center text-4xl shadow-2xl transition-all duration-500"
+                    style={{ backgroundColor: teamData.color, boxShadow: `0 0 40px ${teamData.color}33` }}
+                  >
+                    {teamData.name ? teamData.name.charAt(0).toUpperCase() : "🏏"}
+                  </div>
+                  <span className="text-sm font-bold text-text-muted uppercase tracking-widest">Team Preview</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div 
+                className={`card cursor-pointer transition-all ${teamData.is_public ? 'border-primary bg-primary/5' : 'border-border'}`}
+                onClick={() => setTeamData({ ...teamData, is_public: true })}
+              >
+                <div className="flex items-center gap-4">
+                  <ShieldIcon className={`w-8 h-8 ${teamData.is_public ? 'text-primary' : 'text-text-muted'}`} />
+                  <div>
+                    <h3 className="font-bold">Public Team</h3>
+                    <p className="text-xs text-text-muted">Visible to the community</p>
+                  </div>
+                </div>
+              </div>
+              <div 
+                className={`card cursor-pointer transition-all ${!teamData.is_public ? 'border-primary bg-primary/5' : 'border-border'}`}
+                onClick={() => setTeamData({ ...teamData, is_public: false })}
+              >
+                <div className="flex items-center gap-4">
+                  <ShieldIcon className={`w-8 h-8 ${!teamData.is_public ? 'text-primary' : 'text-text-muted'}`} />
+                  <div>
+                    <h3 className="font-bold">Private Team</h3>
+                    <p className="text-xs text-text-muted">Only you can see this team</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" disabled={loading} className="btn btn-primary w-full py-5 text-lg">
+              {loading ? "Creating Team..." : "Continue to Roster"}
             </button>
-          </div>
+          </motion.form>
+        ) : (
+          <motion.div
+            key="player-manager"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+          >
+            <BulkPlayerManager onSave={handleSavePlayers} />
+            <button 
+              onClick={() => router.push(`/team/${teamId}`)}
+              className="btn btn-ghost w-full mt-4 text-text-muted"
+            >
+              Skip for now
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-          <div className="space-y-3">
-            {players.map((player, index) => (
-              <div key={index} className="flex items-center gap-3 p-4 bg-[#232738] rounded-xl">
-                <span className="text-xs text-[#64748B] w-6">{index + 1}</span>
-                <input
-                  type="text"
-                  value={player.name}
-                  onChange={(e) => updatePlayer(index, { name: e.target.value })}
-                  className="input py-2 flex-1"
-                  placeholder="Player name"
-                />
-                <select
-                  value={player.batting_style}
-                  onChange={(e) => updatePlayer(index, { batting_style: e.target.value })}
-                  className="input py-2 w-24"
-                >
-                  <option value="RHB">RHB</option>
-                  <option value="LHB">LHB</option>
-                </select>
-                <input
-                  type="text"
-                  value={player.bowling_style}
-                  onChange={(e) => updatePlayer(index, { bowling_style: e.target.value })}
-                  className="input py-2 w-32"
-                  placeholder="Bowling style"
-                />
-                <button
-                  type="button"
-                  onClick={() => removePlayer(index)}
-                  className="p-2 text-[#EF4444] hover:bg-[#EF4444]/10 rounded-lg"
-                >
-                  <TrashIcon className="w-4 h-4" />
-                </button>
-              </div>
-            ))}
-          </div>
+      {error && (
+        <div className="mt-6 p-4 bg-danger/10 border border-danger/20 rounded-xl text-danger text-sm text-center">
+          {error}
         </div>
-
-        {/* Submit */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="btn btn-primary w-full py-4 text-base disabled:opacity-50"
-        >
-          {loading ? "Creating Team..." : "Create Team →"}
-        </button>
-      </form>
+      )}
     </div>
   );
 }

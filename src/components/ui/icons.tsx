@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export function SwapIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function SwapIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
@@ -8,7 +8,7 @@ export function SwapIcon({ className = "", ...props }: SVGProps<SVGSVGElement> &
   );
 }
 
-export function UndoIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function UndoIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a5 5 0 015 5v2M3 10l4 4m-4-4l4-4" />
@@ -16,7 +16,7 @@ export function UndoIcon({ className = "", ...props }: SVGProps<SVGSVGElement> &
   );
 }
 
-export function SettingsIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function SettingsIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -25,7 +25,7 @@ export function SettingsIcon({ className = "", ...props }: SVGProps<SVGSVGElemen
   );
 }
 
-export function CricketBallIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function CricketBallIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor" {...props}>
       <circle cx="12" cy="12" r="10" fill="currentColor" />
@@ -36,7 +36,7 @@ export function CricketBallIcon({ className = "", ...props }: SVGProps<SVGSVGEle
   );
 }
 
-export function WicketIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function WicketIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
       <rect x="3" y="3" width="4" height="18" rx="1" />
@@ -48,7 +48,7 @@ export function WicketIcon({ className = "", ...props }: SVGProps<SVGSVGElement>
   );
 }
 
-export function BatIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function BatIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor" {...props}>
       <path d="M22 2L7 17M15.5 8.5L18 5M14 10l-8 8c-.6.6-.6 1.5 0 2.1l4.9 4.9c.6.6 1.5.6 2.1 0l8-8" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" />
@@ -57,7 +57,7 @@ export function BatIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & 
   );
 }
 
-export function SixIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function SixIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
       <circle cx="12" cy="12" r="10" />
@@ -66,7 +66,7 @@ export function SixIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & 
   );
 }
 
-export function FourIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function FourIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
       <circle cx="12" cy="12" r="10" />
@@ -75,7 +75,7 @@ export function FourIcon({ className = "", ...props }: SVGProps<SVGSVGElement> &
   );
 }
 
-export function PlusIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function PlusIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -83,7 +83,7 @@ export function PlusIcon({ className = "", ...props }: SVGProps<SVGSVGElement> &
   );
 }
 
-export function TrashIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function TrashIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -91,7 +91,7 @@ export function TrashIcon({ className = "", ...props }: SVGProps<SVGSVGElement> 
   );
 }
 
-export function ChevronRightIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function ChevronRightIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -99,7 +99,7 @@ export function ChevronRightIcon({ className = "", ...props }: SVGProps<SVGSVGEl
   );
 }
 
-export function HomeIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function HomeIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -107,7 +107,7 @@ export function HomeIcon({ className = "", ...props }: SVGProps<SVGSVGElement> &
   );
 }
 
-export function UsersIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function UsersIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -115,7 +115,7 @@ export function UsersIcon({ className = "", ...props }: SVGProps<SVGSVGElement> 
   );
 }
 
-export function TrophyIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function TrophyIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
@@ -123,7 +123,7 @@ export function TrophyIcon({ className = "", ...props }: SVGProps<SVGSVGElement>
   );
 }
 
-export function ZapIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function ZapIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -131,7 +131,7 @@ export function ZapIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & 
   );
 }
 
-export function GlobeIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function GlobeIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -139,7 +139,7 @@ export function GlobeIcon({ className = "", ...props }: SVGProps<SVGSVGElement> 
   );
 }
 
-export function CalendarIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function CalendarIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -147,7 +147,7 @@ export function CalendarIcon({ className = "", ...props }: SVGProps<SVGSVGElemen
   );
 }
 
-export function LogOutIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function LogOutIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -155,7 +155,7 @@ export function LogOutIcon({ className = "", ...props }: SVGProps<SVGSVGElement>
   );
 }
 
-export function TrendingUpIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function TrendingUpIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -163,7 +163,7 @@ export function TrendingUpIcon({ className = "", ...props }: SVGProps<SVGSVGElem
   );
 }
 
-export function TrendingDownIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function TrendingDownIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 17h8m0 0v-8m0-8l-8 8-4-4-6 6" />
@@ -171,10 +171,34 @@ export function TrendingDownIcon({ className = "", ...props }: SVGProps<SVGSVGEl
   );
 }
 
-export function PlayIcon({ className = "", ...props }: SVGProps<SVGSVGElement> & { className?: string }) {
+export function PlayIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg className={className} fill="currentColor" viewBox="0 0 24 24" {...props}>
       <path d="M8 5v14l11-7z" />
+    </svg>
+  );
+}
+
+export function ShieldIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+    </svg>
+  );
+}
+
+export function UserIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+    </svg>
+  );
+}
+
+export function XIcon({ className = "", ...props }: SVGProps<SVGSVGElement>) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
     </svg>
   );
 }

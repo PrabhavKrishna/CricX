@@ -56,57 +56,161 @@ body {
   background: #3D4758;
 }
 
-/* Card styles */
+/* Card styles - Marvelous Revamp */
 .card {
-  background: #1A1D27;
-  border: 1px solid #2D3748;
-  border-radius: 12px;
-  padding: 16px;
+  background: linear-gradient(135deg, rgba(26, 29, 39, 0.7) 0%, rgba(20, 22, 31, 0.9) 100%);
+  border: 1px solid rgba(45, 55, 72, 0.5);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
+  position: relative;
+  overflow: hidden;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
 }
 
 .card:hover {
-  border-color: #3D4758;
-  transition: border-color 200ms ease;
+  transform: translateY(-4px);
+  border-color: rgba(16, 185, 129, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(16, 185, 129, 0.05);
 }
 
-/* Button base */
+.card-glow-primary:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.5);
+}
+
+.card-glow-accent:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(139, 92, 246, 0.15);
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+/* Button base - Marvelous Revamp */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 14px;
+  gap: 10px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 15px;
   cursor: pointer;
-  transition: all 200ms ease;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
   border: none;
   outline: none;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.3px;
 }
 
 .btn-primary {
-  background: #10B981;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
   color: #0F1117;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
 }
 
 .btn-primary:hover {
-  background: #34D399;
+  background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+  transform: translateY(-2px);
 }
 
 .btn-primary:active {
-  transform: scale(0.97);
+  transform: translateY(0) scale(0.96);
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transform: rotate(45deg);
+  transition: 500ms;
+  opacity: 0;
+}
+
+.btn-primary:hover::after {
+  left: 100%;
+  opacity: 1;
 }
 
 .btn-secondary {
-  background: #232738;
+  background: rgba(35, 39, 56, 0.5);
   color: #F1F5F9;
-  border: 1px solid #2D3748;
+  border: 1px solid rgba(45, 55, 72, 0.8);
+  backdrop-filter: blur(8px);
 }
 
 .btn-secondary:hover {
-  background: #2D3748;
-  border-color: #3D4758;
+  background: rgba(45, 55, 72, 0.8);
+  border-color: rgba(16, 185, 129, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Glass panel */
+.glass-panel {
+  background: rgba(26, 29, 39, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+}
+
+/* Text glow */
+.text-glow-primary {
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.text-glow-accent {
+  text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Input Styles */
+.input-marvelous {
+  background: rgba(15, 17, 23, 0.4) !important;
+  border: 1px solid rgba(45, 55, 72, 0.6) !important;
+  backdrop-filter: blur(4px);
+  transition: all 300ms ease;
+}
+
+.input-marvelous:focus {
+  border-color: #10B981 !important;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.15) !important;
+  background: rgba(15, 17, 23, 0.6) !important;
+}
+
+/* Tabs Animation Utility */
+.tab-indicator {
+  position: absolute;
+  bottom: 0;
+  height: 2px;
+  background: #10B981;
+  box-shadow: 0 0 8px #10B981;
+  border-radius: 2px;
 }
 
 .btn-danger {

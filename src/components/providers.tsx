@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { createBrowserClient } from "@supabase/ssr";
+import { createClient } from "@/lib/supabase";
 import type { Profile } from "@/types";
 import { useAuthStore } from "@/store/auth-store";
 
@@ -24,64 +24,19 @@ export function useAuth() {
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const { setUser } = useAuthStore();
+  const { user, setUser } = useAuthStore();
   const [loading, setLoadingState] = useState(true);
-  const [supabase] = useState(() => 
-    createBrowserClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        auth: {
-          flowType: "implicit",
-          detectSessionInUrl: true,
-          persistSession: true,
-          autoRefreshToken: true,
-          storage: {
-            getItem: (key: string) => {
-              if (typeof window === 'undefined') return null;
-              // Try localStorage first, then cookies
-              const localValue = localStorage.getItem(key);
-              if (localValue) return localValue;
-              // Try cookie
-              const cookies = document.cookie.split('; ').reduce((acc, c) => {
-                const [k, v] = c.split('=');
-                acc[k] = v;
-                return acc;
-              }, {} as Record<string, string>);
-              return cookies[key] || null;
-            },
-            setItem: (key: string, value: string) => {
-              if (typeof window === 'undefined') return;
-              localStorage.setItem(key, value);
-            },
-            removeItem: (key: string) => {
-              if (typeof window === 'undefined') return;
-              localStorage.removeItem(key);
-            },
-          },
-        },
-        cookies: {
-          getAll() {
-            if (typeof document === 'undefined') return [];
-            return document.cookie.split('; ').map(c => {
-              const [name, value] = c.split('=');
-              return { name, value };
-            });
-          },
-          setAll(cookies) {
-            cookies.forEach(({ name, value, options }) => {
-              document.cookie = `${name}=${value}; path=${options?.path || '/'}; max-age=${options?.maxAge || 3600}; SameSite=${options?.sameSite || 'Lax'}`;
-            });
-          },
-        },
-      }
-    )
-  );
+  const [supabase] = useState(() => createClient());
 
   useEffect(() => {
+    console.log("=== Providers: Initializing ===");
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    console.log("Supabase URL present:", !!url);
+    console.log("Supabase Key length:", key?.length || 0);
+
     const getUser = async () => {
       console.log("=== Providers: Getting session ===");
-      console.log("Cookies:", document.cookie);
       
       const { data: { session }, error } = await supabase.auth.getSession();
       
@@ -95,7 +50,20 @@ export function Providers({ children }: { children: React.ReactNode }) {
           .eq("id", session.user.id)
           .single();
         
-        setUser(profile as Profile | null);
+        if (profile) {
+          setUser(profile as Profile);
+        } else {
+          // Construct fallback profile from auth user metadata
+          const fallbackProfile: Profile = {
+            id: session.user.id,
+            email: session.user.email || "",
+            full_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name || "User",
+            avatar_url: session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture || null,
+            created_at: session.user.created_at,
+            updated_at: new Date().toISOString()
+          };
+          setUser(fallbackProfile);
+        }
       } else {
         console.log("No session found");
         setUser(null);
@@ -114,7 +82,19 @@ export function Providers({ children }: { children: React.ReactNode }) {
           .eq("id", session.user.id)
           .single();
         
-        setUser(profile as Profile | null);
+        if (profile) {
+          setUser(profile as Profile);
+        } else {
+          const fallbackProfile: Profile = {
+            id: session.user.id,
+            email: session.user.email || "",
+            full_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name || "User",
+            avatar_url: session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture || null,
+            created_at: session.user.created_at,
+            updated_at: new Date().toISOString()
+          };
+          setUser(fallbackProfile);
+        }
       } else {
         setUser(null);
       }
@@ -133,11 +113,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
   };
 
   const signInWithGoogle = async () => {
-    // Use implicit flow - direct URL approach to get tokens in hash
-    const redirectUri = encodeURIComponent(`${window.location.origin}/auth/callback`);
-    const authUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${redirectUri}`;
-    window.location.href = authUrl;
-    return { error: null };
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    return { error: error as Error | null };
   };
 
   const signUp = async (email: string, password: string, fullName: string) => {
@@ -177,7 +159,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user: null, isLoading: loading, signIn, signInWithGoogle, signUp, signOut, updateProfile }}>
+    <AuthContext.Provider value={{ user, isLoading: loading, signIn, signInWithGoogle, signUp, signOut, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );

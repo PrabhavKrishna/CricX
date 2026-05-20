@@ -1,30 +1,42 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/components/providers";
 
-export default function LoginPage() {
+function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { signIn, signInWithGoogle } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const errorParam = searchParams.get("error");
+  const messageParam = searchParams.get("message");
+
+  useEffect(() => {
+    if (errorParam === "OAuth-failed") {
+      setError(messageParam ? `Google sign-in failed: ${messageParam}` : "Google sign-in failed. Please try again.");
+    }
+  }, [errorParam, messageParam]);
 
   const handleGoogleLogin = async () => {
-    alert("Google button clicked - starting auth...");
-    console.log("Google login clicked");
+    setLoading(true);
     setError("");
     try {
       const { error } = await signInWithGoogle();
       if (error) {
         setError("Google sign-in failed. Please try again.");
+        setLoading(false);
       }
+      // If no error, the browser will redirect
     } catch (e) {
       console.error("Google login error:", e);
       setError("Google sign-in failed. Please try again.");
+      setLoading(false);
     }
   };
 
@@ -155,5 +167,17 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="w-full flex justify-center py-12">
+        <div className="animate-spin w-8 h-8 border-4 border-[#10B981] border-t-transparent rounded-full"></div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }

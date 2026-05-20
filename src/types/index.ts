@@ -227,3 +227,48 @@ export interface NRRData {
   overs_bowled: number;
   nrr: number;
 }
+
+export type TournamentStatus = 'upcoming' | 'ongoing' | 'completed' | 'cancelled';
+
+export interface Tournament {
+  id: string;
+  name: string;
+  description: string | null;
+  logo_url: string | null;
+  banner_url: string | null;
+  start_date: string | null;
+  end_date: string | null;
+  status: TournamentStatus;
+  created_by: string;
+  is_public: boolean;
+  settings: Record<string, any>;
+  created_at: string;
+  updated_at: string;
+  tournament_teams?: TournamentTeam[];
+  matches?: Match[];
+}
+
+export interface TournamentTeam {
+  id: string;
+  tournament_id: string;
+  team_id: string;
+  group_name: string | null;
+  points: number;
+  matches_played: number;
+  matches_won: number;
+  matches_lost: number;
+  matches_tied: number;
+  no_result: number;
+  net_run_rate: number;
+  team?: Team;
+}
+
+export interface TournamentRule {
+  id: string;
+  tournament_id: string;
+  rule_template_id: string | null;
+  name: string;
+  description: string | null;
+  config: Record<string, any>;
+  created_at: string;
+}
