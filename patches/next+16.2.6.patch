@@ -1,5 +1,5 @@
 diff --git a/node_modules/next/dist/build/webpack/plugins/flight-client-entry-plugin.js b/node_modules/next/dist/build/webpack/plugins/flight-client-entry-plugin.js
-index 0840474..df385b8 100644
+index 0840474..6afeb05 100644
 --- a/node_modules/next/dist/build/webpack/plugins/flight-client-entry-plugin.js
 +++ b/node_modules/next/dist/build/webpack/plugins/flight-client-entry-plugin.js
 @@ -126,7 +126,7 @@ class FlightClientEntryPlugin {
@@ -11,8 +11,17 @@ index 0840474..df385b8 100644
                          const moduleInfo = {
                              moduleId: modId,
                              async: compilation.moduleGraph.isAsync(mod)
+@@ -149,7 +149,7 @@ class FlightClientEntryPlugin {
+                     let ssrNamedModuleId = _path.default.relative(compiler.context, modResource);
+                     if (!ssrNamedModuleId.startsWith('.')) {
+                         // TODO use getModuleId instead
+-                        ssrNamedModuleId = `./${(0, _normalizepathsep.normalizePathSep)(ssrNamedModuleId)}`;
++                        ssrNamedModuleId = `./${ssrNamedModuleId.replace(/\\/g, '/')}`;
+                     }
+                     const moduleInfo = {
+                         moduleId: modId,
 diff --git a/node_modules/next/dist/build/webpack/plugins/flight-manifest-plugin.js b/node_modules/next/dist/build/webpack/plugins/flight-manifest-plugin.js
-index 3d300cb..ea5c85f 100644
+index 3d300cb..d80b96b 100644
 --- a/node_modules/next/dist/build/webpack/plugins/flight-manifest-plugin.js
 +++ b/node_modules/next/dist/build/webpack/plugins/flight-manifest-plugin.js
 @@ -106,6 +106,7 @@ function getAppPathRequiredChunks(chunkGroup, excludedFiles) {
@@ -44,7 +53,7 @@ index 3d300cb..ea5c85f 100644
              manifest.entryCSSFiles[chunkEntryName] = entrypoint.getFiles().filter((f)=>!f.startsWith('static/css/pages/') && f.endsWith('.css')).map((file)=>{
                  const source = compilation.getAsset(file).source.source();
                  if (this.experimentalInlineCss && // Inline CSS currently does not work properly with HMR, so we only
-@@ -221,9 +223,10 @@ class ClientReferenceManifestPlugin {
+@@ -221,12 +223,13 @@ class ClientReferenceManifestPlugin {
                  // Note that this isn't that reliable as webpack is still possible to assign
                  // additional queries to make sure there's no conflict even using the `named`
                  // module ID strategy.
@@ -57,9 +66,13 @@ index 3d300cb..ea5c85f 100644
 +                if (!rscNamedModuleId.startsWith('.')) rscNamedModuleId = `./${rscNamedModuleId}`;
                  // The client compiler will always use the CJS Next.js build, so here we
                  // also add the mapping for the ESM build (Edge runtime) to consume.
-                 const esmResource = /[\\/]next[\\/]dist[\\/]/.test(resource) ? resource.replace(/[\\/]next[\\/]dist[\\/]/, '/next/dist/esm/'.replace(/\//g, _path.default.sep)) : null;
+-                const esmResource = /[\\/]next[\\/]dist[\\/]/.test(resource) ? resource.replace(/[\\/]next[\\/]dist[\\/]/, '/next/dist/esm/'.replace(/\//g, _path.default.sep)) : null;
++                const esmResource = /[\\/]next[\\/]dist[\\/]/.test(resource) ? resource.replace(/[\\/]next[\\/]dist[\\/]/, '/next/dist/esm/') : null;
+                 // An extra query param is added to the resource key when it's optimized
+                 // through the Barrel Loader. That's because the same file might be created
+                 // as multiple modules (depending on what you import from it).
 diff --git a/node_modules/next/dist/esm/build/webpack/plugins/flight-client-entry-plugin.js b/node_modules/next/dist/esm/build/webpack/plugins/flight-client-entry-plugin.js
-index 35395e9..171ebad 100644
+index 35395e9..2682dd9 100644
 --- a/node_modules/next/dist/esm/build/webpack/plugins/flight-client-entry-plugin.js
 +++ b/node_modules/next/dist/esm/build/webpack/plugins/flight-client-entry-plugin.js
 @@ -112,7 +112,7 @@ export class FlightClientEntryPlugin {
@@ -71,8 +84,17 @@ index 35395e9..171ebad 100644
                          const moduleInfo = {
                              moduleId: modId,
                              async: compilation.moduleGraph.isAsync(mod)
+@@ -135,7 +135,7 @@ export class FlightClientEntryPlugin {
+                     let ssrNamedModuleId = path.relative(compiler.context, modResource);
+                     if (!ssrNamedModuleId.startsWith('.')) {
+                         // TODO use getModuleId instead
+-                        ssrNamedModuleId = `./${normalizePathSep(ssrNamedModuleId)}`;
++                        ssrNamedModuleId = `./${ssrNamedModuleId.replace(/\\/g, '/')}`;
+                     }
+                     const moduleInfo = {
+                         moduleId: modId,
 diff --git a/node_modules/next/dist/esm/build/webpack/plugins/flight-manifest-plugin.js b/node_modules/next/dist/esm/build/webpack/plugins/flight-manifest-plugin.js
-index d944daa..912e41d 100644
+index d944daa..1ca178b 100644
 --- a/node_modules/next/dist/esm/build/webpack/plugins/flight-manifest-plugin.js
 +++ b/node_modules/next/dist/esm/build/webpack/plugins/flight-manifest-plugin.js
 @@ -57,6 +57,7 @@ function getAppPathRequiredChunks(chunkGroup, excludedFiles) {
@@ -104,7 +126,7 @@ index d944daa..912e41d 100644
              manifest.entryCSSFiles[chunkEntryName] = entrypoint.getFiles().filter((f)=>!f.startsWith('static/css/pages/') && f.endsWith('.css')).map((file)=>{
                  const source = compilation.getAsset(file).source.source();
                  if (this.experimentalInlineCss && // Inline CSS currently does not work properly with HMR, so we only
-@@ -172,9 +174,10 @@ export class ClientReferenceManifestPlugin {
+@@ -172,12 +174,13 @@ export class ClientReferenceManifestPlugin {
                  // Note that this isn't that reliable as webpack is still possible to assign
                  // additional queries to make sure there's no conflict even using the `named`
                  // module ID strategy.
@@ -117,4 +139,8 @@ index d944daa..912e41d 100644
 +                if (!rscNamedModuleId.startsWith('.')) rscNamedModuleId = `./${rscNamedModuleId}`;
                  // The client compiler will always use the CJS Next.js build, so here we
                  // also add the mapping for the ESM build (Edge runtime) to consume.
-                 const esmResource = /[\\/]next[\\/]dist[\\/]/.test(resource) ? resource.replace(/[\\/]next[\\/]dist[\\/]/, '/next/dist/esm/'.replace(/\//g, path.sep)) : null;
+-                const esmResource = /[\\/]next[\\/]dist[\\/]/.test(resource) ? resource.replace(/[\\/]next[\\/]dist[\\/]/, '/next/dist/esm/'.replace(/\//g, path.sep)) : null;
++                const esmResource = /[\\/]next[\\/]dist[\\/]/.test(resource) ? resource.replace(/[\\/]next[\\/]dist[\\/]/, '/next/dist/esm/') : null;
+                 // An extra query param is added to the resource key when it's optimized
+                 // through the Barrel Loader. That's because the same file might be created
+                 // as multiple modules (depending on what you import from it).
