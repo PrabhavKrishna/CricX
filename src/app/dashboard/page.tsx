@@ -49,7 +49,7 @@ export default async function DashboardPage() {
           <h1 className="text-3xl font-bold text-[#F1F5F9]">Dashboard</h1>
           <p className="text-[#64748B] mt-1">Welcome back — ready to score?</p>
         </div>
-        <Link href="/create/match" className="btn btn-primary">
+        <Link href="/dashboard/create/match" className="btn btn-primary">
           <PlusIcon className="w-4 h-4" />
           New Match
         </Link>
@@ -74,7 +74,7 @@ export default async function DashboardPage() {
 
       {/* Quick actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Link href="/create/match" className="card p-6 hover:border-[#10B981]/50 transition-all group">
+        <Link href="/dashboard/create/match" className="card p-6 hover:border-[#10B981]/50 transition-all group">
           <div className="w-12 h-12 rounded-xl bg-[#10B981]/10 flex items-center justify-center mb-4 group-hover:bg-[#10B981]/20 transition-colors">
             <CricketBallIcon className="w-6 h-6 text-[#10B981]" />
           </div>
@@ -82,7 +82,7 @@ export default async function DashboardPage() {
           <p className="text-sm text-[#64748B]">Start a new cricket match with custom rules</p>
         </Link>
 
-        <Link href="/create/team" className="card p-6 hover:border-[#F59E0B]/50 transition-all group">
+        <Link href="/dashboard/create/team" className="card p-6 hover:border-[#F59E0B]/50 transition-all group">
           <div className="w-12 h-12 rounded-xl bg-[#F59E0B]/10 flex items-center justify-center mb-4 group-hover:bg-[#F59E0B]/20 transition-colors">
             <TrophyIcon className="w-6 h-6 text-[#F59E0B]" />
           </div>
@@ -90,7 +90,7 @@ export default async function DashboardPage() {
           <p className="text-sm text-[#64748B]">Create a team with players and stats</p>
         </Link>
 
-        <Link href="/create/rule" className="card p-6 hover:border-[#8B5CF6]/50 transition-all group">
+        <Link href="/dashboard/create/rule" className="card p-6 hover:border-[#8B5CF6]/50 transition-all group">
           <div className="w-12 h-12 rounded-xl bg-[#8B5CF6]/10 flex items-center justify-center mb-4 group-hover:bg-[#8B5CF6]/20 transition-colors">
             <TrophyIcon className="w-6 h-6 text-[#8B5CF6]" />
           </div>
@@ -145,7 +145,7 @@ export default async function DashboardPage() {
             <div className="text-4xl mb-4">🏏</div>
             <h3 className="text-lg font-semibold text-[#F1F5F9] mb-2">No matches yet</h3>
             <p className="text-[#64748B] mb-6">Create your first match to start scoring</p>
-            <Link href="/create/match" className="btn btn-primary">
+            <Link href="/dashboard/create/match" className="btn btn-primary">
               <PlusIcon className="w-4 h-4" />
               Create Match
             </Link>

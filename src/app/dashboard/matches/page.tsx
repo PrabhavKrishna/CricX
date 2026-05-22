@@ -25,7 +25,7 @@ export default async function MatchesPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-[#F1F5F9]">Matches</h1>
-        <Link href="/create/match" className="btn btn-primary">
+        <Link href="/dashboard/create/match" className="btn btn-primary">
           <PlusIcon className="w-4 h-4" />
           New Match
         </Link>
@@ -80,7 +80,7 @@ export default async function MatchesPage() {
           <div className="text-4xl mb-4">🏏</div>
           <h3 className="text-lg font-semibold text-[#F1F5F9] mb-2">No matches yet</h3>
           <p className="text-[#64748B] mb-6">Create your first match to start scoring</p>
-          <Link href="/create/match" className="btn btn-primary">
+           <Link href="/dashboard/create/match" className="btn btn-primary">
             <PlusIcon className="w-4 h-4" />
             Create Match
           </Link>

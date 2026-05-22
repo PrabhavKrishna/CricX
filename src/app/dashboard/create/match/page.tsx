@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/lib/supabase";
@@ -19,6 +19,8 @@ import type { Team } from "@/types";
 export default function CreateMatchPage() {
   const router = useRouter();
   const { user } = useAuth();
+  const searchParams = useSearchParams();
+  const tournamentId = searchParams?.get("tournamentId");
   const [loading, setLoading] = useState(false);
   const [teams, setTeams] = useState<Team[]>([]);
   const [fetchingTeams, setFetchingTeams] = useState(true);
@@ -83,6 +85,7 @@ export default function CreateMatchPage() {
         match_date: new Date(form.match_date).toISOString(),
         is_public: form.is_public,
         created_by: user.id,
+        tournament_id: tournamentId || null,
         status: "upcoming",
       })
       .select()
@@ -331,7 +334,7 @@ export default function CreateMatchPage() {
             <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="card border-secondary/30 bg-secondary/5 text-center py-8">
               <h3 className="text-xl font-bold text-secondary mb-2">No Squads Found</h3>
               <p className="text-text-muted mb-6">You must create at least two squads to initiate a match.</p>
-              <Link href="/create/team" className="btn btn-secondary border-secondary/40 hover:border-secondary">
+              <Link href="/dashboard/create/team" className="btn btn-secondary border-secondary/40 hover:border-secondary">
                 <PlusIcon className="w-4 h-4 mr-2" />
                 Build a Squad
               </Link>

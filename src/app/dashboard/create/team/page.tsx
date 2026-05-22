@@ -9,6 +9,8 @@ import { BulkPlayerManager } from "@/components/team/bulk-player-manager";
 
 export default function CreateTeamPage() {
   const router = useRouter();
+  const searchParams = useSearchParams ? useSearchParams() : null;
+  const tournamentId = searchParams?.get("tournamentId");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [step, setStep] = useState(1);
@@ -37,6 +39,7 @@ export default function CreateTeamPage() {
       .insert({
         ...teamData,
         owner_id: user.id,
+        tournament_id: tournamentId || null,
       })
       .select()
       .single();

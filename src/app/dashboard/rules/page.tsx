@@ -15,7 +15,7 @@ export default async function RulesPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-[#F1F5F9]">My Rules</h1>
-        <Link href="/create/rule" className="btn btn-primary">Create Rule</Link>
+        <Link href="/dashboard/create/rule" className="btn btn-primary">Create Rule</Link>
       </div>
 
       {rules && rules.length > 0 ? (
@@ -37,7 +37,7 @@ export default async function RulesPage() {
           <div className="text-4xl mb-4">⚡</div>
           <h3 className="text-lg font-semibold text-[#F1F5F9] mb-2">No custom rules</h3>
           <p className="text-[#64748B] mb-6">Create rules to modify scoring dynamically</p>
-          <Link href="/create/rule" className="btn btn-primary">Create Rule</Link>
+          <Link href="/dashboard/create/rule" className="btn btn-primary">Create Rule</Link>
         </div>
       )}
     </div>

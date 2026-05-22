@@ -16,7 +16,7 @@ export default async function TeamsPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-[#F1F5F9]">Teams</h1>
-        <Link href="/create/team" className="btn btn-primary">
+        <Link href="/dashboard/create/team" className="btn btn-primary">
           <PlusIcon className="w-4 h-4" />
           New Team
         </Link>
@@ -39,7 +39,7 @@ export default async function TeamsPage() {
           <div className="text-4xl mb-4">👥</div>
           <h3 className="text-lg font-semibold text-[#F1F5F9] mb-2">No teams yet</h3>
           <p className="text-[#64748B] mb-6">Create a team to add players and start competing</p>
-          <Link href="/create/team" className="btn btn-primary">
+           <Link href="/dashboard/create/team" className="btn btn-primary">
             <PlusIcon className="w-4 h-4" />
             Create Team
           </Link>

@@ -45,7 +45,8 @@ export default function CreateTournamentPage() {
       setError(insertError.message);
       setLoading(false);
     } else {
-      router.push(`/tournament/${data.id}`);
+      // After creating the tournament, navigate to the tournament dashboard
+      router.push(`/dashboard/tournament/${data.id}`);
     }
   };
 
