@@ -1,5 +1,18 @@
+diff --git a/node_modules/next/dist/build/webpack/plugins/flight-client-entry-plugin.js b/node_modules/next/dist/build/webpack/plugins/flight-client-entry-plugin.js
+index 0840474..df385b8 100644
+--- a/node_modules/next/dist/build/webpack/plugins/flight-client-entry-plugin.js
++++ b/node_modules/next/dist/build/webpack/plugins/flight-client-entry-plugin.js
+@@ -126,7 +126,7 @@ class FlightClientEntryPlugin {
+                 const modResource = modPath ? modPath.startsWith(_constants1.BARREL_OPTIMIZATION_PREFIX) ? (0, _utils1.formatBarrelOptimizedResource)(mod.resource, modPath) : modPath + modQuery : mod.resource;
+                 if (typeof modId !== 'undefined' && modResource) {
+                     if (mod.layer === _constants.WEBPACK_LAYERS.reactServerComponents) {
+-                        const key = _path.default.relative(compiler.context, modResource).replace(/\/next\/dist\/esm\//, '/next/dist/');
++                        const key = _path.default.relative(compiler.context, modResource).replace(/\\/g, '/').replace(/\/next\/dist\/esm\//, '/next/dist/');
+                         const moduleInfo = {
+                             moduleId: modId,
+                             async: compilation.moduleGraph.isAsync(mod)
 diff --git a/node_modules/next/dist/build/webpack/plugins/flight-manifest-plugin.js b/node_modules/next/dist/build/webpack/plugins/flight-manifest-plugin.js
-index 3d300cb..7c98fc3 100644
+index 3d300cb..ea5c85f 100644
 --- a/node_modules/next/dist/build/webpack/plugins/flight-manifest-plugin.js
 +++ b/node_modules/next/dist/build/webpack/plugins/flight-manifest-plugin.js
 @@ -106,6 +106,7 @@ function getAppPathRequiredChunks(chunkGroup, excludedFiles) {
@@ -10,14 +23,18 @@ index 3d300cb..7c98fc3 100644
      let groupName = entryName.slice(0, entryName.lastIndexOf('/'))// Remove slots
      .replace(/\/@[^/]+/g, '')// Remove the group with lookahead to make sure it's not interception route
      .replace(/\/\([^/]+\)(?=(\/|$))/g, '')// Remove catch-all routes since they should be part of the parent group that the catch-all would apply to.
-@@ -176,6 +177,7 @@ class ClientReferenceManifestPlugin {
-             } else if (!/^app[\\/]/.test(entryName)) {
+@@ -171,9 +172,10 @@ class ClientReferenceManifestPlugin {
+             }
+         });
+         for (let [entryName, entrypoint] of compilation.entrypoints){
++            entryName = entryName.replace(/\\/g, '/');
+             if (entryName === _constants.CLIENT_STATIC_FILES_RUNTIME_MAIN_APP || entryName === _constants.APP_CLIENT_INTERNALS) {
+                 entryName = '';
+-            } else if (!/^app[\\/]/.test(entryName)) {
++            } else if (!/^app\//.test(entryName)) {
                  continue;
              }
-+            entryName = entryName.replace(/\\/g, '/');
              const manifest = {
-                 moduleLoading: {
-                     prefix,
 @@ -189,7 +191,7 @@ class ClientReferenceManifestPlugin {
                  edgeRscModuleMapping: {}
              };
@@ -27,8 +44,35 @@ index 3d300cb..7c98fc3 100644
              manifest.entryCSSFiles[chunkEntryName] = entrypoint.getFiles().filter((f)=>!f.startsWith('static/css/pages/') && f.endsWith('.css')).map((file)=>{
                  const source = compilation.getAsset(file).source.source();
                  if (this.experimentalInlineCss && // Inline CSS currently does not work properly with HMR, so we only
+@@ -221,9 +223,10 @@ class ClientReferenceManifestPlugin {
+                 // Note that this isn't that reliable as webpack is still possible to assign
+                 // additional queries to make sure there's no conflict even using the `named`
+                 // module ID strategy.
+-                let ssrNamedModuleId = (0, _path.relative)(context, ((_mod_resourceResolveData = mod.resourceResolveData) == null ? void 0 : _mod_resourceResolveData.path) || resource);
+-                const rscNamedModuleId = (0, _path.relative)(context, ((_mod_resourceResolveData1 = mod.resourceResolveData) == null ? void 0 : _mod_resourceResolveData1.path) || resource);
+-                if (!ssrNamedModuleId.startsWith('.')) ssrNamedModuleId = `./${ssrNamedModuleId.replace(/\\/g, '/')}`;
++                let ssrNamedModuleId = relative(context, ((_mod_resourceResolveData = mod.resourceResolveData) == null ? void 0 : _mod_resourceResolveData.path) || resource).replace(/\\/g, '/');
++                let rscNamedModuleId = relative(context, ((_mod_resourceResolveData1 = mod.resourceResolveData) == null ? void 0 : _mod_resourceResolveData1.path) || resource).replace(/\\/g, '/');
++                if (!ssrNamedModuleId.startsWith('.')) ssrNamedModuleId = `./${ssrNamedModuleId}`;
++                if (!rscNamedModuleId.startsWith('.')) rscNamedModuleId = `./${rscNamedModuleId}`;
+                 // The client compiler will always use the CJS Next.js build, so here we
+                 // also add the mapping for the ESM build (Edge runtime) to consume.
+                 const esmResource = /[\\/]next[\\/]dist[\\/]/.test(resource) ? resource.replace(/[\\/]next[\\/]dist[\\/]/, '/next/dist/esm/'.replace(/\//g, _path.default.sep)) : null;
+diff --git a/node_modules/next/dist/esm/build/webpack/plugins/flight-client-entry-plugin.js b/node_modules/next/dist/esm/build/webpack/plugins/flight-client-entry-plugin.js
+index 35395e9..171ebad 100644
+--- a/node_modules/next/dist/esm/build/webpack/plugins/flight-client-entry-plugin.js
++++ b/node_modules/next/dist/esm/build/webpack/plugins/flight-client-entry-plugin.js
+@@ -112,7 +112,7 @@ export class FlightClientEntryPlugin {
+                 const modResource = modPath ? modPath.startsWith(BARREL_OPTIMIZATION_PREFIX) ? formatBarrelOptimizedResource(mod.resource, modPath) : modPath + modQuery : mod.resource;
+                 if (typeof modId !== 'undefined' && modResource) {
+                     if (mod.layer === WEBPACK_LAYERS.reactServerComponents) {
+-                        const key = path.relative(compiler.context, modResource).replace(/\/next\/dist\/esm\//, '/next/dist/');
++                        const key = path.relative(compiler.context, modResource).replace(/\\/g, '/').replace(/\/next\/dist\/esm\//, '/next/dist/');
+                         const moduleInfo = {
+                             moduleId: modId,
+                             async: compilation.moduleGraph.isAsync(mod)
 diff --git a/node_modules/next/dist/esm/build/webpack/plugins/flight-manifest-plugin.js b/node_modules/next/dist/esm/build/webpack/plugins/flight-manifest-plugin.js
-index d944daa..8226376 100644
+index d944daa..912e41d 100644
 --- a/node_modules/next/dist/esm/build/webpack/plugins/flight-manifest-plugin.js
 +++ b/node_modules/next/dist/esm/build/webpack/plugins/flight-manifest-plugin.js
 @@ -57,6 +57,7 @@ function getAppPathRequiredChunks(chunkGroup, excludedFiles) {
@@ -39,14 +83,18 @@ index d944daa..8226376 100644
      let groupName = entryName.slice(0, entryName.lastIndexOf('/'))// Remove slots
      .replace(/\/@[^/]+/g, '')// Remove the group with lookahead to make sure it's not interception route
      .replace(/\/\([^/]+\)(?=(\/|$))/g, '')// Remove catch-all routes since they should be part of the parent group that the catch-all would apply to.
-@@ -127,6 +128,7 @@ export class ClientReferenceManifestPlugin {
-             } else if (!/^app[\\/]/.test(entryName)) {
+@@ -122,9 +123,10 @@ export class ClientReferenceManifestPlugin {
+             }
+         });
+         for (let [entryName, entrypoint] of compilation.entrypoints){
++            entryName = entryName.replace(/\\/g, '/');
+             if (entryName === CLIENT_STATIC_FILES_RUNTIME_MAIN_APP || entryName === APP_CLIENT_INTERNALS) {
+                 entryName = '';
+-            } else if (!/^app[\\/]/.test(entryName)) {
++            } else if (!/^app\//.test(entryName)) {
                  continue;
              }
-+            entryName = entryName.replace(/\\/g, '/');
              const manifest = {
-                 moduleLoading: {
-                     prefix,
 @@ -140,7 +142,7 @@ export class ClientReferenceManifestPlugin {
                  edgeRscModuleMapping: {}
              };
@@ -56,3 +104,17 @@ index d944daa..8226376 100644
              manifest.entryCSSFiles[chunkEntryName] = entrypoint.getFiles().filter((f)=>!f.startsWith('static/css/pages/') && f.endsWith('.css')).map((file)=>{
                  const source = compilation.getAsset(file).source.source();
                  if (this.experimentalInlineCss && // Inline CSS currently does not work properly with HMR, so we only
+@@ -172,9 +174,10 @@ export class ClientReferenceManifestPlugin {
+                 // Note that this isn't that reliable as webpack is still possible to assign
+                 // additional queries to make sure there's no conflict even using the `named`
+                 // module ID strategy.
+-                let ssrNamedModuleId = relative(context, ((_mod_resourceResolveData = mod.resourceResolveData) == null ? void 0 : _mod_resourceResolveData.path) || resource);
+-                const rscNamedModuleId = relative(context, ((_mod_resourceResolveData1 = mod.resourceResolveData) == null ? void 0 : _mod_resourceResolveData1.path) || resource);
+-                if (!ssrNamedModuleId.startsWith('.')) ssrNamedModuleId = `./${ssrNamedModuleId.replace(/\\/g, '/')}`;
++                let ssrNamedModuleId = relative(context, ((_mod_resourceResolveData = mod.resourceResolveData) == null ? void 0 : _mod_resourceResolveData.path) || resource).replace(/\\/g, '/');
++                let rscNamedModuleId = relative(context, ((_mod_resourceResolveData1 = mod.resourceResolveData) == null ? void 0 : _mod_resourceResolveData1.path) || resource).replace(/\\/g, '/');
++                if (!ssrNamedModuleId.startsWith('.')) ssrNamedModuleId = `./${ssrNamedModuleId}`;
++                if (!rscNamedModuleId.startsWith('.')) rscNamedModuleId = `./${rscNamedModuleId}`;
+                 // The client compiler will always use the CJS Next.js build, so here we
+                 // also add the mapping for the ESM build (Edge runtime) to consume.
+                 const esmResource = /[\\/]next[\\/]dist[\\/]/.test(resource) ? resource.replace(/[\\/]next[\\/]dist[\\/]/, '/next/dist/esm/'.replace(/\//g, path.sep)) : null;
