@@ -1,0 +1,24 @@
+diff --git a/node_modules/next/dist/build/webpack/plugins/flight-manifest-plugin.js b/node_modules/next/dist/build/webpack/plugins/flight-manifest-plugin.js
+index 3d300cb..53add6f 100644
+--- a/node_modules/next/dist/build/webpack/plugins/flight-manifest-plugin.js
++++ b/node_modules/next/dist/build/webpack/plugins/flight-manifest-plugin.js
+@@ -106,6 +106,7 @@ function getAppPathRequiredChunks(chunkGroup, excludedFiles) {
+ // - app/[...catchAll]/page -> app
+ // - app/foo/@slot/[...catchAll]/page -> app/foo
+ function entryNameToGroupName(entryName) {
++    entryName = entryName.replace(/\\/g, '/');
+     let groupName = entryName.slice(0, entryName.lastIndexOf('/'))// Remove slots
+     .replace(/\/@[^/]+/g, '')// Remove the group with lookahead to make sure it's not interception route
+     .replace(/\/\([^/]+\)(?=(\/|$))/g, '')// Remove catch-all routes since they should be part of the parent group that the catch-all would apply to.
+diff --git a/node_modules/next/dist/esm/build/webpack/plugins/flight-manifest-plugin.js b/node_modules/next/dist/esm/build/webpack/plugins/flight-manifest-plugin.js
+index d944daa..0f88766 100644
+--- a/node_modules/next/dist/esm/build/webpack/plugins/flight-manifest-plugin.js
++++ b/node_modules/next/dist/esm/build/webpack/plugins/flight-manifest-plugin.js
+@@ -57,6 +57,7 @@ function getAppPathRequiredChunks(chunkGroup, excludedFiles) {
+ // - app/[...catchAll]/page -> app
+ // - app/foo/@slot/[...catchAll]/page -> app/foo
+ function entryNameToGroupName(entryName) {
++    entryName = entryName.replace(/\\/g, '/');
+     let groupName = entryName.slice(0, entryName.lastIndexOf('/'))// Remove slots
+     .replace(/\/@[^/]+/g, '')// Remove the group with lookahead to make sure it's not interception route
+     .replace(/\/\([^/]+\)(?=(\/|$))/g, '')// Remove catch-all routes since they should be part of the parent group that the catch-all would apply to.
