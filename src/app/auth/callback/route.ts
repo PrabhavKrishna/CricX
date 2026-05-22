@@ -20,12 +20,6 @@ export async function GET(request: Request) {
     console.log("Exchanging code for session...");
     const supabase = await createClient();
 
-    // Handle case where Supabase client is not available
-    if (!supabase) {
-      console.error("Supabase client not available");
-      return NextResponse.redirect(`${origin}/auth/login?error=OAuth-failed&message=Service+unavailable`);
-    }
-
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
