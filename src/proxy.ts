@@ -1,18 +1,19 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   const pathname = request.nextUrl.pathname;
 
   // Skip auth for callback page - tokens in URL not cookies yet
-  if (pathname === "/auth/callback") {
+  if (pathname.startsWith('/auth/callback')) {
     return NextResponse.next({ request });
   }
 
+  // If environment variables are missing, continue without auth checks
   if (!supabaseUrl || !supabaseKey) {
-    console.error("Middleware: Missing Supabase environment variables!");
+    console.warn("Middleware: Supabase environment variables missing, skipping auth checks");
     return NextResponse.next({ request });
   }
 
@@ -32,9 +33,7 @@ export async function middleware(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
-          supabaseResponse = NextResponse.next({
-            request,
-          });
+          supabaseResponse = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           );
@@ -43,31 +42,30 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
 
-  const publicPaths = ['/auth/login', '/auth/signup', '/auth/callback', '/discover'];
-  const isPublic = pathname === '/' || publicPaths.some(p => pathname.startsWith(p));
+    const publicPaths = ['/auth/login', '/auth/signup', '/auth/callback', '/discover'];
+    const isPublic = pathname === '/' || publicPaths.some(p => pathname.startsWith(p));
 
-  if (!user && !isPublic && !pathname.startsWith('/api')) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/auth/login';
-    const response = NextResponse.redirect(url);
-    // Copy cookies from supabaseResponse to the new redirect response
-    supabaseResponse.cookies.getAll().forEach(cookie => {
-      response.cookies.set(cookie.name, cookie.value, cookie);
-    });
-    return response;
-  }
+    if (!user && !isPublic && !pathname.startsWith('/api')) {
+      const url = new URL('/auth/login', request.url);
+      const response = NextResponse.redirect(url);
+      // Copy cookies from supabaseResponse to the new redirect response
+      supabaseResponse.cookies.getAll().forEach((c) => response.cookies.set(c.name, c.value, c));
+      return response;
+    }
 
-  if (user && (pathname === '/auth/login' || pathname === '/auth/signup')) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/dashboard';
-    const response = NextResponse.redirect(url);
-    // Copy cookies from supabaseResponse to the new redirect response
-    supabaseResponse.cookies.getAll().forEach(cookie => {
-      response.cookies.set(cookie.name, cookie.value, cookie);
-    });
-    return response;
+    if (user && (pathname === '/auth/login' || pathname === '/auth/signup')) {
+      const url = new URL('/dashboard', request.url);
+      const response = NextResponse.redirect(url);
+      // Copy cookies from supabaseResponse to the new redirect response
+      supabaseResponse.cookies.getAll().forEach((c) => response.cookies.set(c.name, c.value, c));
+      return response;
+    }
+  } catch (error) {
+    console.error("Middleware: Error checking user auth status:", error);
+    // Continue with request even if auth check fails
   }
 
   return supabaseResponse;
