@@ -7,9 +7,9 @@ import { useAuth } from "@/components/providers";
 
 const navItems = [
   { href: "/dashboard", icon: HomeIcon, label: "Dashboard" },
-  { href: "/matches", icon: CricketBallIcon, label: "Matches" },
-  { href: "/teams", icon: UsersIcon, label: "Teams" },
-  { href: "/create/rule", icon: ZapIcon, label: "My Rules" },
+  { href: "/dashboard/matches", icon: CricketBallIcon, label: "Matches" },
+  { href: "/dashboard/teams", icon: UsersIcon, label: "Teams" },
+  { href: "/dashboard/rules", icon: ZapIcon, label: "My Rules" },
   { href: "/discover", icon: GlobeIcon, label: "Discover" },
 ];
 

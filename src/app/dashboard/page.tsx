@@ -103,7 +103,7 @@ export default async function DashboardPage() {
       <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-[#F1F5F9]">Recent Matches</h2>
-          <Link href="/matches" className="text-sm text-[#10B981] hover:text-[#34D399]">
+          <Link href="/dashboard/matches" className="text-sm text-[#10B981] hover:text-[#34D399]">
             View all →
           </Link>
         </div>
@@ -158,7 +158,7 @@ export default async function DashboardPage() {
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold text-[#F1F5F9]">Your Teams</h2>
-            <Link href="/teams" className="text-sm text-[#10B981] hover:text-[#34D399]">
+            <Link href="/dashboard/teams" className="text-sm text-[#10B981] hover:text-[#34D399]">
               View all →
             </Link>
           </div>
@@ -167,7 +167,7 @@ export default async function DashboardPage() {
             {teams.map((team: TeamWithPlayerCount) => (
               <Link
                 key={team.id}
-                href={`/team/${team.id}`}
+                href={`/dashboard/team/${team.id}`}
                 className="card hover:border-[#3D4758] transition-all"
               >
                 <div className="flex items-center gap-3 mb-3">

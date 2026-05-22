@@ -69,7 +69,7 @@ export default function CreateTeamPage() {
       setError(playerError.message);
       setLoading(false);
     } else {
-      router.push(`/team/${teamId}`);
+      router.push(`/dashboard/team/${teamId}`);
     }
   };
 
@@ -184,7 +184,7 @@ export default function CreateTeamPage() {
           >
             <BulkPlayerManager onSave={handleSavePlayers} />
             <button 
-              onClick={() => router.push(`/team/${teamId}`)}
+            onClick={() => router.push(`/dashboard/team/${teamId}`)}
               className="btn btn-ghost w-full mt-4 text-text-muted"
             >
               Skip for now

@@ -102,7 +102,7 @@ export default function CreateMatchPage() {
 
     await supabase.from("match_teams").insert(matchTeams);
 
-    router.push(`/match/${match.id}`);
+    router.push(`/dashboard/match/${match.id}`);
   };
 
   const formats = [
