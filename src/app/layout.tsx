@@ -1,36 +1,43 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
-import "@/styles/animations.css";
-import { Providers } from "@/components/providers";
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../lib/auth';
+import { SessionProvider } from './SessionContext';
 
 const inter = Inter({
-  variable: "--font-inter",
+  variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-mono",
+const outfit = Outfit({
+  variable: "--font-display",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "CricX — Custom Cricket Match Scoring",
-  description: "Score custom cricket matches with your own rules. The ultimate platform for community cricket.",
-  icons: {
-    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%2310B981'/><text x='16' y='21' text-anchor='middle' font-size='14' fill='white'>🏏</text></svg>",
-  },
+  title: "cricX",
+  description: "Cricket scoring and tournament management.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession(authOptions);
+
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased bg-[#0F1117] text-[#F1F5F9] min-h-screen`}>
-        <Providers>{children}</Providers>
+    <html
+      lang="en"
+      className={`${inter.variable} ${outfit.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col bg-background text-foreground select-none">
+        <SessionProvider value={session}>
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );
